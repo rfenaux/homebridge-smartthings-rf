@@ -2,7 +2,7 @@ import { PlatformAccessory, CharacteristicValue } from 'homebridge';
 import { IKHomeBridgeHomebridgePlatform } from '../platform';
 import { BaseService } from './baseService';
 import { MultiServiceAccessory } from '../multiServiceAccessory';
-import { ShortEvent } from 'smartthings-webhook/dist/requestResponse';
+import { ShortEvent } from '../webhook/subscriptionHandler';
 
 export class SwitchService extends BaseService {
 
@@ -72,7 +72,9 @@ export class SwitchService extends BaseService {
   }
 
   public processEvent(event: ShortEvent): void {
-    this.log.debug(`Event updating switch capability for ${this.name} to ${event.value}`);
-    this.service.updateCharacteristic(this.platform.Characteristic.On, event.value === 'on');
+    if (event.capability === 'switch') {
+      this.log.debug(`Event updating switch capability for ${this.name} to ${event.value}`);
+      this.service.updateCharacteristic(this.platform.Characteristic.On, event.value === 'on');
+    }
   }
 }
