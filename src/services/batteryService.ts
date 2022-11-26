@@ -6,8 +6,8 @@ import { MultiServiceAccessory } from '../multiServiceAccessory';
 export class BatteryService extends BaseService {
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
     this.setServiceType(platform.Service.Battery);
 
     this.log.debug(`Adding BatteryService to ${this.name}`);
@@ -34,9 +34,9 @@ export class BatteryService extends BaseService {
     this.log.debug('Received getBatteryLevel() event for ' + this.name);
 
     return new Promise((resolve, reject) => {
-      this.getStatus().then(success => {
-        if (success) {
-          const batteryLevel = this.deviceStatus.status.battery.battery.value;
+      this.getStatus().then(status => {
+        if (status) {
+           const batteryLevel = status.battery.battery.value;
           if (batteryLevel === null) {
             return reject (new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE));
           }

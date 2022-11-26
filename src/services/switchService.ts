@@ -6,8 +6,8 @@ import { MultiServiceAccessory } from '../multiServiceAccessory';
 export class SwitchService extends BaseService {
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.setServiceType(platform.Service.Switch);
     // Set the event handlers
@@ -35,7 +35,7 @@ export class SwitchService extends BaseService {
       this.log.error(this.name + ' is offline');
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
-    this.multiServiceAccessory.sendCommand('switch', value ? 'on' : 'off').then((success) => {
+    this.multiServiceAccessory.sendCommand('switch', value ? 'on' : 'off', this.componentId).then((success) => {
       if (success) {
         this.log.debug('onSet(' + value + ') SUCCESSFUL for ' + this.name);
         this.deviceStatus.timestamp = 0;  // Force a refresh next query.
@@ -52,11 +52,11 @@ export class SwitchService extends BaseService {
     this.log.debug('Received getSwitchState() event for ' + this.name);
 
     return new Promise((resolve, reject) => {
-      this.getStatus().then(success => {
-        if (success) {
+      this.getStatus().then(status => {
+        if (status) {
           let switchState;
           try {
-            switchState = this.deviceStatus.status.switch.switch.value;
+            switchState = status.switch.switch.value;
           } catch(error) {
             this.log.error(`Missing switch status from ${this.name}`);
           }

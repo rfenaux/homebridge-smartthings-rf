@@ -8,8 +8,8 @@ export class LockService extends BaseService {
   private lockInTransitionStart = 0;
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.setServiceType(platform.Service.LockMechanism);
     // Set the event handlers
@@ -51,12 +51,12 @@ export class LockService extends BaseService {
 
     if (Date.now() - this.lockInTransitionStart > 10000) {
       return new Promise((resolve, reject) => {
-        this.getStatus().then(success => {
-          if (!success) {
+        this.getStatus().then(status => {
+          if (!status) {
             reject(new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE));
             return;
           }
-          this.targetState = this.deviceStatus.status.lock.lock.value === 'locked' ?
+          this.targetState = status.lock.lock.value === 'locked' ?
             this.platform.Characteristic.LockTargetState.SECURED :
             this.platform.Characteristic.LockTargetState.UNSECURED;
           this.log.debug(`Reset ${this.name} to ${this.targetState}`);
@@ -80,7 +80,7 @@ export class LockService extends BaseService {
     }
     this.lockInTransitionStart = Date.now();
     this.service.updateCharacteristic(this.platform.Characteristic.LockTargetState, value);
-    this.multiServiceAccessory.sendCommand('lock', value ? 'lock' : 'unlock').then((success) => {
+    this.multiServiceAccessory.sendCommand('lock', value ? 'lock' : 'unlock', this.componentId).then((success) => {
       if (success) {
         this.log.debug('onSet(' + value + ') SUCCESSFUL for ' + this.name);
         this.deviceStatus.timestamp = 0; // Force refresh
@@ -98,9 +98,9 @@ export class LockService extends BaseService {
     this.log.debug('Received getLockState() event for ' + this.name);
 
     return new Promise((resolve, reject) => {
-      this.getStatus().then(success => {
-        if (success) {
-          const lockState = this.deviceStatus.status.lock.lock.value;
+      this.getStatus().then(status => {
+        if (status) {
+          const lockState = status.lock.lock.value;
           this.log.debug(`LockState value from ${this.name}: ${lockState}`);
 
           switch (lockState) {

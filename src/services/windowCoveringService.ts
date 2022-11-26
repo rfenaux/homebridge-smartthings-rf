@@ -13,8 +13,8 @@ export class WindowCoveriingService extends BaseService {
   };
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.setServiceType(platform.Service.Switch);
     // Set the event handlers
@@ -45,7 +45,7 @@ export class WindowCoveriingService extends BaseService {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
 
-    this.multiServiceAccessory.sendCommand('windowShadeLevel', 'setShadeLevel', [value])
+    this.multiServiceAccessory.sendCommand('windowShadeLevel', 'setShadeLevel', this.componentId, [value])
       .then(() => {
         this.log.debug('onSet(' + value + ') SUCCESSFUL for ' + this.name);
         this.pollTry = 0;
@@ -151,10 +151,10 @@ export class WindowCoveriingService extends BaseService {
         return reject(new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE));
       }
 
-      this.getStatus().then(success => {
+      this.getStatus().then(status => {
 
-        if (success) {
-          const position = this.deviceStatus.status.windowShadeLevel.shadeLevel.value;
+        if (status) {
+          const position = status.windowShadeLevel.shadeLevel.value;
           this.log.debug('onGet() SUCCESSFUL for ' + this.name + '. value = ' + position);
           resolve(position);
         } else {

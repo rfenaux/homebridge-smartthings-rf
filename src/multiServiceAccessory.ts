@@ -43,7 +43,7 @@ export class MultiServiceAccessory extends BasePlatformAccessory {
     'lock': LockService,
     // 'switch': SwitchService,
     'motionSensor': MotionService,
-    'waterSensor' : LeakDetectorService,
+    'waterSensor': LeakDetectorService,
     'smokeDetector': SmokeDetectorService,
     'carbonMonoxideDetector': CarbonMonoxideDetectorService,
     'presenceSensor': OccupancySensorService,
@@ -90,7 +90,8 @@ export class MultiServiceAccessory extends BasePlatformAccessory {
   constructor(
     platform: IKHomeBridgeHomebridgePlatform,
     accessory: PlatformAccessory,
-    capabilities,
+    components,
+    //capabilities,
   ) {
     super(platform, accessory);
 
@@ -99,20 +100,29 @@ export class MultiServiceAccessory extends BasePlatformAccessory {
     // If this device has a 'switch' capability, need to look at the combinations to determine what kind of device.  Fans, lights,
     // switches all have a switch capability and we need to add the correct one.
 
-    Object.keys(MultiServiceAccessory.capabilityMap).forEach((capability) => {
-      if (capabilities.find((c) => c.id === capability)) {
-        this.services.push(new (
-          MultiServiceAccessory.capabilityMap[capability])(this.platform, this.accessory, this, this.name, this.deviceStatus,
-        ));
+    components.forEach(component => {
+      Object.keys(MultiServiceAccessory.capabilityMap).forEach((capability) => {
+        if ((component.capabilities as Array<any>).find((c) => c.id === capability)) {
+          this.services.push(new (
+            MultiServiceAccessory.capabilityMap[capability])(
+              this.platform,
+              this.accessory,
+              this,
+              this.name,
+              component.id,
+              this.deviceStatus,
+            ),
+          );
+        }
+      });
+      if ((component.capabilities as Array<any>).find(c => c.id === 'switch')) {
+        let service = this.findComboService(component.capabilities);
+        if (service === undefined) {
+          service = SwitchService;
+        }
+        this.services.push(new service(this.platform, this.accessory, this, this.name, component.id, this.deviceStatus));
       }
     });
-    if (capabilities.find(c => c.id === 'switch')) {
-      let service = this.findComboService(capabilities);
-      if (service === undefined) {
-        service = SwitchService;
-      }
-      this.services.push(new service(this.platform, this.accessory, this, this.name, this.deviceStatus));
-    }
   }
 
   // If this is a capability that needs to be combined with others in order to determone the service,

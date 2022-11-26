@@ -8,10 +8,10 @@ export class DoorService extends BaseService {
   private doorInTransitionStart = 0;
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
+    name: string, componentId: string, deviceStatus) {
     // This can either be a Door or Garage Door Opener
 
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
     this.setServiceType(platform.Service.GarageDoorOpener);
     // Set the event handlers
     this.log.debug(`Adding DoorService to ${this.name}`);
@@ -54,13 +54,12 @@ export class DoorService extends BaseService {
 
     if (Date.now() - this.doorInTransitionStart > 20000) {
       return new Promise((resolve, reject) => {
-        this.getStatus().then(success => {
-          if (!success) {
+        this.getStatus().then(status => {
+          if (!status) {
             reject(new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE));
             return;
           }
-          this.targetState = this.deviceStatus.status.doorControl.door.value === 'closed' ||
-            this.deviceStatus.status.doorControl.door.value === 'closing' ?
+          this.targetState = status.doorControl.door.value === 'closed' || status.doorControl.door.value === 'closing' ?
             this.platform.Characteristic.TargetDoorState.CLOSED :
             this.platform.Characteristic.TargetDoorState.OPEN;
           this.log.debug(`Reset ${this.name} to ${this.targetState}`);
@@ -91,7 +90,7 @@ export class DoorService extends BaseService {
     } else {
       command = 'open';
     }
-    this.multiServiceAccessory.sendCommand('doorControl', command).then((success) => {
+    this.multiServiceAccessory.sendCommand('doorControl', command, this.componentId).then((success) => {
       if (success) {
         this.log.debug('onSet(' + value + ') SUCCESSFUL for ' + this.name);
         this.deviceStatus.timestamp = 0;  // Force refresh
@@ -109,9 +108,9 @@ export class DoorService extends BaseService {
     this.log.debug('Received getDoorState() event for ' + this.name);
 
     return new Promise((resolve, reject) => {
-      this.getStatus().then(success => {
-        if (success) {
-          const doorState = this.deviceStatus.status.doorControl.door.value;
+      this.getStatus().then(status => {
+        if (status) {
+          const doorState = status.doorControl.door.value;
           this.log.debug(`DoorState value from ${this.name}: ${doorState}`);
 
           switch (doorState) {

@@ -222,16 +222,16 @@ export class IKHomeBridgeHomebridgePlatform implements DynamicPlatformPlugin {
   }
 
   createAccessoryObject(device, accessory): BasePlatformAccessory {
-    const component = device.components.find(c => c.id === 'main');
+    //const component = device.components.find(c => c.id === 'main');
 
-    let capabilities;
-    if (component) {
-      capabilities = component.capabilities;
-    } else {
-      capabilities = device.components[0].capabilities;
-    }
+    // let capabilities;
+    // if (component) {
+    //   capabilities = component.capabilities;
+    // } else {
+    //   capabilities = device.components[0].capabilities;
+    // }
 
-    return new MultiServiceAccessory(this, accessory, capabilities);
+    return new MultiServiceAccessory(this, accessory, device.components);
   }
 }
 

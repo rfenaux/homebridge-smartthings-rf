@@ -9,8 +9,8 @@ export abstract class SensorService extends BaseService {
   };
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
   }
 
   protected initService(sensorService: WithUUID<typeof Service>, sensorCharacteristic: WithUUID<new () => Characteristic>,
@@ -45,7 +45,8 @@ export abstract class SensorService extends BaseService {
         if (success) {
           let value;
           try {
-            value = this.statusTranslation(this.deviceStatus.status);
+            value = this.statusTranslation(
+              (this.deviceStatus.components as Array<any>).find(component => component.id === this.componentId).status);
             this.log.debug(`State for ${this.name}: ${value}`);
             resolve(value);
             return;

@@ -90,15 +90,22 @@ export abstract class BasePlatformAccessory {
         this.failureCount = 0;
         this.waitFor(() => this.commandInProgress === false).then(() => {
           this.axInstance.get(this.statusURL).then((res) => {
-            if (res.data.components.main !== undefined) {
-              this.deviceStatus.status = res.data.components.main;
-              this.deviceStatus.timestamp = Date.now();
-              this.log.debug(`Updated status for ${this.name}: ${JSON.stringify(this.deviceStatus.status)}`);
-              resolve(true);
-            } else {
-              this.log.debug(`No status returned for ${this.name}`);
+            if (res.data.components === undefined) {
               resolve(false);
+              return;
             }
+            this.deviceStatus.status = res.data;
+            this.deviceStatus.timestamp = Date.now();
+            this.log.debug(`Updated status for ${this.name}: ${JSON.stringify(this.deviceStatus.status)}`);
+            // if (res.data.components.main !== undefined) {
+            //   this.deviceStatus.status = res.data.components.main;
+            //   this.deviceStatus.timestamp = Date.now();
+            //   this.log.debug(`Updated status for ${this.name}: ${JSON.stringify(this.deviceStatus.status)}`);
+            //   resolve(true);
+            // } else {
+            //   this.log.debug(`No status returned for ${this.name}`);
+            //   resolve(false);
+            // }
           }).catch(error => {
             this.failureCount++;
             this.log.error(`Failed to request status from ${this.name}: ${error}.  This is failure number ${this.failureCount}`);
@@ -159,7 +166,7 @@ export abstract class BasePlatformAccessory {
     }
   }
 
-  async sendCommand(capability: string, command: string, args?: unknown[]): Promise<boolean> {
+  async sendCommand(capability: string, command: string, component = 'main', args?: unknown[]): Promise<boolean> {
 
     let cmd: unknown;
 
@@ -167,12 +174,14 @@ export abstract class BasePlatformAccessory {
       cmd = {
         capability: capability,
         command: command,
+        component: component,
         arguments: args,
       };
     } else {
       cmd = {
         capability: capability,
         command: command,
+        component: component,
       };
     }
 

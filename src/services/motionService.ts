@@ -6,8 +6,8 @@ import { SensorService } from './sensorService';
 export class MotionService extends SensorService {
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.log.debug(`Adding MotionService to ${this.name}`);
 

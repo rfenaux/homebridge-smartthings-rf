@@ -6,8 +6,8 @@ import { MultiServiceAccessory } from '../multiServiceAccessory';
 export class ValveService extends BaseService {
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    name: string, componentId: string, deviceStatus) {
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.setServiceType(platform.Service.Valve);
     // Set the event handlers
@@ -26,12 +26,12 @@ export class ValveService extends BaseService {
     // reset the target state to the current state.
 
     return new Promise((resolve, reject) => {
-      this.getStatus().then(success => {
-        if (!success) {
+      this.getStatus().then(status => {
+        if (!status) {
           reject(new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE));
           return;
         }
-        const valveState = this.deviceStatus.status.valve.valve.value;
+        const valveState = status.valve.valve.value;
         this.log.debug(`Received valve value of ${valveState} from Smartthings`);
         resolve(valveState === 'open' ? this.platform.Characteristic.Active.ACTIVE : this.platform.Characteristic.Active.INACTIVE);
       });
@@ -47,7 +47,7 @@ export class ValveService extends BaseService {
       throw new this.platform.api.hap.HapStatusError(this.platform.api.hap.HAPStatus.SERVICE_COMMUNICATION_FAILURE);
     }
     const command = value === this.platform.Characteristic.Active.ACTIVE ? 'open' : 'close';
-    this.multiServiceAccessory.sendCommand('valve', command).then((success) => {
+    this.multiServiceAccessory.sendCommand('valve', command, this.componentId).then((success) => {
       if (success) {
         this.log.debug('onSet(' + value + ') SUCCESSFUL for ' + this.name);
         this.deviceStatus.timestamp = 0; // Force refresh

@@ -6,9 +6,9 @@ import { SensorService } from './sensorService';
 export class LeakDetectorService extends SensorService {
 
   constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, multiServiceAccessory: MultiServiceAccessory,
-    name: string, deviceStatus) {
+    name: string, componentId: string, deviceStatus) {
 
-    super(platform, accessory, multiServiceAccessory, name, deviceStatus);
+    super(platform, accessory, multiServiceAccessory, name, componentId, deviceStatus);
 
     this.initService(platform.Service.LeakSensor,
       platform.Characteristic.LeakDetected,
