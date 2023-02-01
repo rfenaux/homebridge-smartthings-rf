@@ -13,6 +13,11 @@ This is yet another smartthings plugin for Homebridge.  This requires no access 
 require a lot of work to install.  It will discover devices automatically as well as unregister devices that are removed
 from your smarttthings network.  This is currently under development.
 
+## New in version 2.0
+This version of the plugin will support the Webhook protocol from SmartThings via a "Smart App".  It requires s separate 
+access token which you need to get from me, and is now only open to a closed beta.  I will let everyone know when it is generally
+available and how you can take advantage of it.
+
 ## Fixed in 1.4.23
 * If a sensor service doesn't return a valid value, it will be removed from the device.
 * Fixed some state update management in the Thermostat service.
