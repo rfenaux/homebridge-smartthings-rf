@@ -1,6 +1,6 @@
 import { PlatformAccessory, Logger, API, Characteristic, CharacteristicValue, Service, WithUUID } from 'homebridge';
 import axios = require('axios');
-import { IKHomeBridgeHomebridgePlatform } from './platform';
+import { RFHomeBridgeHomebridgePlatform } from './platform';
 import { ShortEvent } from './webhook/subscriptionHandler';
 
 type DeviceStatus = {
@@ -22,7 +22,7 @@ export abstract class BasePlatformAccessory {
    */
 
   protected accessory: PlatformAccessory;
-  protected platform: IKHomeBridgeHomebridgePlatform;
+  protected platform: RFHomeBridgeHomebridgePlatform;
   public readonly name: string;
   protected characteristic: typeof Characteristic;
   protected log: Logger;
@@ -48,7 +48,7 @@ export abstract class BasePlatformAccessory {
   }
 
   constructor(
-    platform: IKHomeBridgeHomebridgePlatform,
+    platform: RFHomeBridgeHomebridgePlatform,
     accessory: PlatformAccessory,
   ) {
     this.accessory = accessory;

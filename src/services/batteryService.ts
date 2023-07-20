@@ -1,11 +1,11 @@
 import { PlatformAccessory, CharacteristicValue } from 'homebridge';
-import { IKHomeBridgeHomebridgePlatform } from '../platform';
+import { RFHomeBridgeHomebridgePlatform } from '../platform';
 import { BaseService } from './baseService';
 import { MultiServiceAccessory } from '../multiServiceAccessory';
 
 export class BatteryService extends BaseService {
 
-  constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, componentId: string, capabilities: string[],
+  constructor(platform: RFHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, componentId: string, capabilities: string[],
     multiServiceAccessory: MultiServiceAccessory,
     name: string, deviceStatus) {
     super(platform, accessory, componentId, capabilities, multiServiceAccessory, name, deviceStatus);

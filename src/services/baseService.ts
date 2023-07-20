@@ -2,12 +2,12 @@ import { PlatformAccessory, Logger, Service, WithUUID } from 'homebridge';
 import { ShortEvent } from '../webhook/subscriptionHandler';
 import { MultiServiceAccessory } from '../multiServiceAccessory';
 //import { BasePlatformAccessory } from '../basePlatformAccessory';
-import { IKHomeBridgeHomebridgePlatform } from '../platform';
+import { RFHomeBridgeHomebridgePlatform } from '../platform';
 
 export class BaseService {
   protected accessory: PlatformAccessory;
   protected log: Logger;
-  protected platform: IKHomeBridgeHomebridgePlatform;
+  protected platform: RFHomeBridgeHomebridgePlatform;
   protected name = '';
   protected deviceStatus;
   protected multiServiceAccessory: MultiServiceAccessory;
@@ -15,7 +15,7 @@ export class BaseService {
   public componentId: string;
   public capabilities: string[];
 
-  constructor(platform: IKHomeBridgeHomebridgePlatform,
+  constructor(platform: RFHomeBridgeHomebridgePlatform,
     accessory: PlatformAccessory,
     componentId: string,
     capabilities: string[],

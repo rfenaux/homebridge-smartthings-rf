@@ -1,7 +1,7 @@
 //import { RequestBody, ResponseBody } from '../webhook/subscriptionHandler;
 import axios = require('axios');
 //import { BasePlatformAccessory } from '../basePlatformAccessory';
-import { IKHomeBridgeHomebridgePlatform } from '../platform';
+import { RFHomeBridgeHomebridgePlatform } from '../platform';
 import { Logger, PlatformConfig } from 'homebridge';
 import { WEBHOOK_URL, WH_CONNECT_RETRY_MINUTES, wait } from '../keyValues';
 import { MultiServiceAccessory } from '../multiServiceAccessory';
@@ -34,7 +34,7 @@ export class SubscriptionHandler {
 
   private axInstance: axios.AxiosInstance;
 
-  constructor(platform: IKHomeBridgeHomebridgePlatform, devices: MultiServiceAccessory[]) {
+  constructor(platform: RFHomeBridgeHomebridgePlatform, devices: MultiServiceAccessory[]) {
     this.config = platform.config;
     this.log = platform.log;
     devices.forEach((device) => {

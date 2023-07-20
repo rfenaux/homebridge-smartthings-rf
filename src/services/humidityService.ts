@@ -1,12 +1,12 @@
 import { PlatformAccessory } from 'homebridge';
-import { IKHomeBridgeHomebridgePlatform } from '../platform';
+import { RFHomeBridgeHomebridgePlatform } from '../platform';
 import { SensorService } from './sensorService';
 import { MultiServiceAccessory } from '../multiServiceAccessory';
 import { ShortEvent } from '../webhook/subscriptionHandler';
 
 export class HumidityService extends SensorService {
 
-  constructor(platform: IKHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, componentId: string, capabilitites: string[],
+  constructor(platform: RFHomeBridgeHomebridgePlatform, accessory: PlatformAccessory, componentId: string, capabilitites: string[],
     multiServiceAccessory: MultiServiceAccessory,
     name: string, deviceStatus) {
     super(platform, accessory, componentId, capabilitites, multiServiceAccessory, name, deviceStatus);

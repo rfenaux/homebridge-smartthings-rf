@@ -1,6 +1,6 @@
 import { PlatformAccessory, Characteristic, CharacteristicValue, Service, WithUUID, Logger, API } from 'homebridge';
 import axios = require('axios');
-import { IKHomeBridgeHomebridgePlatform } from './platform';
+import { RFHomeBridgeHomebridgePlatform } from './platform';
 import { BaseService } from './services/baseService';
 // import { BasePlatformAccessory } from './basePlatformAccessory';
 import { MotionService } from './services/motionService';
@@ -117,7 +117,7 @@ export class MultiServiceAccessory {
   ];
 
   protected accessory: PlatformAccessory;
-  protected platform: IKHomeBridgeHomebridgePlatform;
+  protected platform: RFHomeBridgeHomebridgePlatform;
   public readonly name: string;
   protected characteristic: typeof Characteristic;
   protected log: Logger;
@@ -144,7 +144,7 @@ export class MultiServiceAccessory {
   }
 
   constructor(
-    platform: IKHomeBridgeHomebridgePlatform,
+    platform: RFHomeBridgeHomebridgePlatform,
     accessory: PlatformAccessory,
     // capabilities,
   ) {
