@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rfenaux/homebridge-smartthings-rf.git"
+    "url": "git+https://github.com/rfenaux/homebridge-smartthings-rf.git"
   },
   "engines": {
     "node": ">=14.18.1",
@@ -47,5 +47,10 @@
       "type": "venmo",
       "url": "https://venmo.com/?txn=pay&audience=public&recipients=ira-klein-3"
     }
-  ]
+  ],
+  "bugs": {
+    "url": "https://github.com/rfenaux/homebridge-smartthings-rf/issues"
+  },
+  "homepage": "https://github.com/rfenaux/homebridge-smartthings-rf#readme",
+  "author": "rfenaux"
 }
