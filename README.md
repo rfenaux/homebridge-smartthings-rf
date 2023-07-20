@@ -13,7 +13,7 @@ This is yet another smartthings plugin for Homebridge.  This requires no access 
 require a lot of work to install.  It will discover devices automatically as well as unregister devices that are removed
 from your smarttthings network.  This is currently under development.
 
-## Fixed in version 1.5.10
+## Fixed in version 1.5.11
 Fixed window share support including webhook support for the window shade service.  Added polling paramter for window shades, 
 'PollWindowShadesSeconds'
 ## Fixed in version 1.5.9
